@@ -1,3 +1,7 @@
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const cssFilename = "marketing";
+const devMode = process.env.NODE_ENV === "development";
+
 module.exports = {
   module: {
     rules: [
@@ -13,9 +17,16 @@ module.exports = {
         },
       },
       {
-        test: /\.css$/i,
-        use: ["style-loader", "css-loader", "postcss-loader"],
+        test: /\.(sa|sc|c)ss$/,
+        use: [
+          devMode ? "style-loader" : MiniCssExtractPlugin.loader,
+          "css-loader",
+          "postcss-loader",
+        ],
       },
     ],
   },
+  plugins: [].concat(devMode ? [] : [new MiniCssExtractPlugin({
+    filename: cssFilename,
+  })]),
 };
